@@ -1,19 +1,19 @@
-# Local LLM Server for Semantic Kernel .NET Developer
-
-*如果你使用中文，请[访问这里](README.zh-cn.md)*
-
-Or you are using Semantic Kernel's [Hugging Face http server](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) as your local LLM service  , but based on the inaccessibility of hugging face in mainland China and management reasons, I tried to reconstruct the project. At this stage, it is adapted for macOS and Linux environments.
-
-At this stage, the implementation of ChatCompletion and Embedding has been completed.
-
-**ChatCompletion** is adapted to  LLM  *baichu2*, *ChatGLM3*, *Microsoft-phi 1.5*
-
-**Embeddings** adapted to LLM *jina-embeddings* (English Embedding model), *text2vec-large-chinese* (Chiense Embedding model)
-
-**Samples**
+# Semantic Kernel .NET 开发者离线大模型本地服务
 
 
-0. download your LLM firstly and using pip to install python library
+或者您正在使用 Semantic Kernel 的 [Hugging Face http 服务器](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) 作为本地 LLM 服务，但是基于 Hugging Face 在中国大陆的访问受限以及企业管理方面的原因，我尝试重构这个项目，直接去掉对 Hugging Face 的依赖，针对macOS和Linux环境进行了适配。
+
+现阶段，ChatCompletion和Embedding的实现就已经完成了。
+
+**ChatCompletion** 适用大模型包括 *baichu2*、*ChatGLM3*、*Microsoft-phi 1.5*
+
+**Embeddings** 适应大模型包括 *jina-embeddings*（英语嵌入模型），*text2vec-large-chinese*（中文嵌入模型）
+
+
+
+**使用方法**
+
+0. 你需要先下载你的模型以及设置你的 Python 环境
 
 
 ```bash
@@ -22,7 +22,7 @@ pip install -r requirement.txt
 
 ```
 
-1. .env config your ChatCompletion and Embedding model location
+1. 通过 .env 配置你的 ChatCompletion and Embedding 模型在本地的位置
 
 ```txt
 
@@ -31,7 +31,7 @@ EMBEDDING_URL = 'Your embeddings model location'
 
 ```
 
-2. Start your Local LLM Http Server
+2. 启动本地 LLM 服务
 
 ```bash
 
@@ -39,9 +39,9 @@ python local_llm_service.py
 
 ```
 
-3. Add Microsoft.SemanticKernel, Microsoft.SemanticKernel.Connectors.AI.HuggingFace, Microsoft.SemanticKernel.Connectors.Memory.Qdrant(You can choose different vector database) packages 
+3. 添加 Microsoft.SemanticKernel, Microsoft.SemanticKernel.Connectors.AI.HuggingFace, Microsoft.SemanticKernel.Connectors.Memory.Qdrant(你可以选择你喜欢的向量数据库) packages 
 
-4. Initialization endpoint for chatcompletion, embeddings, and qdrant 
+4. 初始化 chatcompletion, embeddings, and qdrant 的 Endpoint
 
 
 ```csharp
@@ -54,7 +54,7 @@ string qdrant_endpoint = "http://localhost:6333";
 ```
 
 
-5. Sample 1 - ChatCompletion
+5. 例子一 - ChatCompletion
 
 
 ```csharp
@@ -66,7 +66,7 @@ using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextEmbedding;
 
 IKernel kernel = new KernelBuilder()
             .WithHuggingFaceTextCompletionService(
-                model: "Baichuan2",  // You can set Baichuan2 , ChatGLM, PHI1.5 as your model name 
+                model: "Baichuan2",  //你可以设置模型名字为 Baichuan2 , ChatGLM, PHI1.5 
                 endpoint: chat_endpoint)
             .Build();
 
@@ -79,17 +79,17 @@ result.GetValue<string>()
 
 ```
 
-6. Sample 2 - Embeddings
+6. 例子2 - Embeddings
 
 
 ```csharp
 
 var qdrantMemoryBuilder = new MemoryBuilder();
 
-var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint); // you can set text2veccn and jina as your embeddings
+var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint); // 你可以设置 text2veccn 和 jina 作为  embeddings 模型
 
 qdrantMemoryBuilder.WithTextEmbeddingGeneration(hfembeddings);
-qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024); // 1024 as your embedding model text2veccn's vector size . If you use jina base model ,please set it 768
+qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024); // 1024 是向量模型 text2veccn 的 vector size . 如果你使用 jina 模型，请设置为 768
 
 var builder = qdrantMemoryBuilder.Build();
 
@@ -111,9 +111,9 @@ await foreach (var item in searchResults)
 
 ```
 
-If you want to get English text embedding and chat completion , please click [here](./samples/dotnet_notebook.ipynb)
+如果你希望测试英语版本的离线 text embedding and chat completion ,  [点击这里](./samples/dotnet_notebook.ipynb)
 
-🍔🍔🍔🍔🍔🍔🍔🍔🍔 More functions will be added in the future 
+🍔🍔🍔🍔🍔🍔🍔🍔🍔 期待更多功能
 
 
 
