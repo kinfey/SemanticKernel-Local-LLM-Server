@@ -26,7 +26,7 @@ pip install -r requirement.txt
 
 ```txt
 
-CHAT_COMPLETEION_URL = 'Your chat completion model location'
+CHAT_COMPLETION_URL = 'Your chat completion model location'
 EMBEDDING_URL = 'Your embeddings model location'
 
 ```
