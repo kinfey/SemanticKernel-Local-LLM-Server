@@ -20,6 +20,9 @@ class LocalLLMEmbedding:
         if self.model_name.find("text2veccn")>-1:
             self.model = SentenceTransformer(self.EMBEDDING_URL)
 
+        if self.model_name.find("bge")>-1:
+            self.model = SentenceTransformer(self.EMBEDDING_URL)
+
 
     def call_local_llm_embeddings(self, sentences):
 

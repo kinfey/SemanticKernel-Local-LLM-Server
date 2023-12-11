@@ -10,7 +10,7 @@ At this stage, the implementation of ChatCompletion and Embedding has been compl
 
 **ChatCompletion** is adapted to  LLM  *baichu2*, *ChatGLM3*, *Microsoft-phi 1.5*
 
-**Embeddings** adapted to LLM *jina-embeddings* (English Embedding model), *text2vec-large-chinese* (Chiense Embedding model)
+**Embeddings** adapted to LLM *jina-embeddings* (English Embedding model), *text2vec-large-chinese* (Chiense Embedding model), *bge-\*-v1.5*(Chinese/English Embedding model)
 
 **Samples**
 

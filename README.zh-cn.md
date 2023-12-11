@@ -9,7 +9,7 @@
 
 **ChatCompletion** 适用大模型包括 *baichu2*、*ChatGLM3*、*Microsoft-phi 1.5*
 
-**Embeddings** 适应大模型包括 *jina-embeddings*（英语嵌入模型），*text2vec-large-chinese*（中文嵌入模型）
+**Embeddings** 适应大模型包括 *jina-embeddings*（英语嵌入模型），*text2vec-large-chinese*（中文嵌入模型）,*bge-\*-v1.5*(中文/英语嵌入模型)
 
 
 
