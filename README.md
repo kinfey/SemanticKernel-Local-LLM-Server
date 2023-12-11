@@ -2,6 +2,8 @@
 
 *如果你使用中文，请[访问这里](README.zh-cn.md)*
 
+*Support Semantic-Kernel RC.3*
+
 Or you are using Semantic Kernel's [Hugging Face http server](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) as your local LLM service  , but based on the inaccessibility of hugging face in mainland China and management reasons, I tried to reconstruct the project. At this stage, it is adapted for macOS and Linux environments.
 
 At this stage, the implementation of ChatCompletion and Embedding has been completed.
@@ -64,15 +66,17 @@ using Microsoft.SemanticKernel.Connectors.Memory.Qdrant;
 using Microsoft.SemanticKernel.Plugins.Memory;
 using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextEmbedding;
 
-IKernel kernel = new KernelBuilder()
-            .WithHuggingFaceTextCompletionService(
-                model: "Baichuan2",  // You can set Baichuan2 , ChatGLM, PHI1.5 as your model name 
+#pragma warning disable SKEXP0020
+
+Kernel kernel = new KernelBuilder()
+            .AddHuggingFaceTextGeneration(
+                model: "baichuan2",
                 endpoint: chat_endpoint)
             .Build();
 
-var questionAnswerFunction = kernel.CreateSemanticFunction("问: {{$input}}; 答:");
+var questionAnswerFunction = kernel.CreateFunctionFromPrompt("问: {{$input}} 答:");
 
-var result = await kernel.RunAsync("介绍一下微软", questionAnswerFunction);
+var result = await kernel.InvokeAsync(questionAnswerFunction, new("介绍一下自己"));
 
 result.GetValue<string>()
 
@@ -84,12 +88,19 @@ result.GetValue<string>()
 
 ```csharp
 
+#pragma warning disable SKEXP0052
+#pragma warning disable CS1061
+#pragma warning disable SKEXP0011
+#pragma warning disable SKEXP0026
+
+#pragma warning disable SKEXP0020
+
 var qdrantMemoryBuilder = new MemoryBuilder();
 
-var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint); // you can set text2veccn and jina as your embeddings
+var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint);
 
 qdrantMemoryBuilder.WithTextEmbeddingGeneration(hfembeddings);
-qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024); // 1024 as your embedding model text2veccn's vector size . If you use jina base model ,please set it 768
+qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024);
 
 var builder = qdrantMemoryBuilder.Build();
 
@@ -111,7 +122,7 @@ await foreach (var item in searchResults)
 
 ```
 
-If you want to get English text embedding and chat completion , please click [here](./samples/dotnet_notebook.ipynb)
+If you want to get English text embedding and chat completion , please click [here](./samples/dotnet_notebook_en.ipynb)
 
 🍔🍔🍔🍔🍔🍔🍔🍔🍔 More functions will be added in the future 
 

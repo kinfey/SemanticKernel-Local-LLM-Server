@@ -26,9 +26,8 @@ class LocalLLMCompletion:
 
         self.model_name = model_name.lower()
 
-        self.CHAT_COMPLETEION_URL = os.environ.get("CHAT_COMPLETEION_URL")
+        self.CHAT_COMPLETION_URL = os.environ.get("CHAT_COMPLETION_URL")
 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.CHAT_COMPLETEION_URL, trust_remote_code=True)
         
         self.init_local_llm_model(model_name)
 
@@ -66,19 +65,29 @@ class LocalLLMCompletion:
 
             if torch.backends.mps.is_available():
 
-                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETEION_URL, trust_remote_code=True).to("mps")
+                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True).to("mps")
 
             elif torch.backends.cuda.is_available():
 
-                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETEION_URL, trust_remote_code=True).half().cuda()
+                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True).half().cuda()
 
             else:
-                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETEION_URL, trust_remote_code=True)
+                self.model = AutoModel.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True)
+
+            
+            self.tokenizer = AutoTokenizer.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True)    
 
         if self.model_name.find("phi") > -1:
             
-            self.model = AutoModelForCausalLM.from_pretrained(self.CHAT_COMPLETEION_URL, trust_remote_code=True)
+            self.model = AutoModelForCausalLM.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True)
+
+
+            self.tokenizer = AutoTokenizer.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True)
 
         if self.model_name.find("baichuan2") > -1:
-            self.model = AutoModelForCausalLM.from_pretrained(self.CHAT_COMPLETEION_URL, torch_dtype=torch.float16,device_map="auto",trust_remote_code=True)
-            self.model.generation_config = GenerationConfig.from_pretrained(self.CHAT_COMPLETEION_URL)
+            self.model = AutoModelForCausalLM.from_pretrained(self.CHAT_COMPLETION_URL, torch_dtype=torch.float16,device_map="auto",trust_remote_code=True)
+
+
+            self.tokenizer = AutoTokenizer.from_pretrained(self.CHAT_COMPLETION_URL,use_fast=False, trust_remote_code=True)
+            # self.model = AutoModelForCausalLM.from_pretrained(self.CHAT_COMPLETION_URL, trust_remote_code=True).to("mps")
+            self.model.generation_config = GenerationConfig.from_pretrained(self.CHAT_COMPLETION_URL)

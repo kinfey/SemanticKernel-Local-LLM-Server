@@ -1,5 +1,7 @@
 # Semantic Kernel .NET 开发者离线大模型本地服务器
 
+*支持 Semantic-Kernel RC.3*
+
 
 或者您正在使用 Semantic Kernel 的 [Hugging Face http 服务器](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) 作为本地 LLM 服务，但是基于 Hugging Face 在中国大陆的访问受限以及企业管理方面的原因，我尝试重构这个项目，直接去掉对 Hugging Face 的依赖，针对macOS和Linux环境进行了适配。
 
@@ -64,15 +66,17 @@ using Microsoft.SemanticKernel.Connectors.Memory.Qdrant;
 using Microsoft.SemanticKernel.Plugins.Memory;
 using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextEmbedding;
 
-IKernel kernel = new KernelBuilder()
-            .WithHuggingFaceTextCompletionService(
-                model: "Baichuan2",  //你可以设置模型名字为 Baichuan2 , ChatGLM, PHI1.5 
+#pragma warning disable SKEXP0020
+
+Kernel kernel = new KernelBuilder()
+            .AddHuggingFaceTextGeneration(
+                model: "baichuan2",
                 endpoint: chat_endpoint)
             .Build();
 
-var questionAnswerFunction = kernel.CreateSemanticFunction("问: {{$input}}; 答:");
+var questionAnswerFunction = kernel.CreateFunctionFromPrompt("问: {{$input}} 答:");
 
-var result = await kernel.RunAsync("介绍一下微软", questionAnswerFunction);
+var result = await kernel.InvokeAsync(questionAnswerFunction, new("介绍一下自己"));
 
 result.GetValue<string>()
 
@@ -84,12 +88,20 @@ result.GetValue<string>()
 
 ```csharp
 
+
+#pragma warning disable SKEXP0052
+#pragma warning disable CS1061
+#pragma warning disable SKEXP0011
+#pragma warning disable SKEXP0026
+
+#pragma warning disable SKEXP0020
+
 var qdrantMemoryBuilder = new MemoryBuilder();
 
-var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint); // 你可以设置 text2veccn 和 jina 作为  embeddings 模型
+var hfembeddings = new HuggingFaceTextEmbeddingGeneration("text2veccn", embeddings_endpoint);
 
 qdrantMemoryBuilder.WithTextEmbeddingGeneration(hfembeddings);
-qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024); // 1024 是向量模型 text2veccn 的 vector size . 如果你使用 jina 模型，请设置为 768
+qdrantMemoryBuilder.WithQdrantMemoryStore(qdrant_endpoint, 1024);
 
 var builder = qdrantMemoryBuilder.Build();
 
@@ -109,9 +121,10 @@ await foreach (var item in searchResults)
 }
 
 
+
 ```
 
-如果你希望测试英语版本的离线 text embedding and chat completion ,  [点击这里](./samples/dotnet_notebook.ipynb)
+如果你希望测试英语版本的离线 text embedding and chat completion ,  [点击这里](./samples/dotnet_notebook_en.ipynb)
 
 🍔🍔🍔🍔🍔🍔🍔🍔🍔 期待更多功能
 
