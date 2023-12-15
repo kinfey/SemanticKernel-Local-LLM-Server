@@ -1,6 +1,6 @@
 # Semantic Kernel .NET 开发者离线大模型本地服务器
 
-*支持 Semantic-Kernel RC.3*
+*支持 Semantic-Kernel RC.4*
 
 
 或者您正在使用 Semantic Kernel 的 [Hugging Face http 服务器](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) 作为本地 LLM 服务，但是基于 Hugging Face 在中国大陆的访问受限以及企业管理方面的原因，我尝试重构这个项目，直接去掉对 Hugging Face 的依赖，针对macOS和Linux环境进行了适配。

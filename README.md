@@ -2,7 +2,7 @@
 
 *如果你使用中文，请[访问这里](README.zh-cn.md)*
 
-*Support Semantic-Kernel RC.3*
+*Support Semantic-Kernel RC.4*
 
 Or you are using Semantic Kernel's [Hugging Face http server](https://github.com/microsoft/semantic-kernel/tree/3451a4ebbc9db0d049f48804c12791c681a326cb/samples/apps/hugging-face-http-server) as your local LLM service  , but based on the inaccessibility of hugging face in mainland China and management reasons, I tried to reconstruct the project. At this stage, it is adapted for macOS and Linux environments.
 
